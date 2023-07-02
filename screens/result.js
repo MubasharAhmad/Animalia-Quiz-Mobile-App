@@ -1,4 +1,5 @@
-import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -7,9 +8,28 @@ import {
   TouchableOpacity,
   Platform,
   StatusBar,
+  BackHandler,
 } from "react-native";
 
 const Result = () => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Levels");
+      return true;
+    };
+
+    const backHandler =
+      Platform.OS === "android"
+        ? BackHandler.addEventListener("hardwareBackPress", backAction)
+        : null;
+
+    return () => {
+      if (Platform.OS === "android") {
+        backHandler.remove();
+      }
+    };
+  }, []);
   return (
     <View style={styles.SafeArea}>
       <View>
