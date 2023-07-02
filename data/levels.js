@@ -6,7 +6,7 @@ export default levels = [
       {
         question: "Which specie of lion has been extinct?",
         options: ["White Lion", "Asian Lion", "Cave Lions", "African Lions"],
-        correctAnswer: "Cave Lion",
+        correctAnswer: "Cave Lions",
       },
       {
         question: "Which animal cannot Jump?",

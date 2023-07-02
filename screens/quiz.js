@@ -11,7 +11,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Alert } from "react-native";
 
 const Quiz = () => {
-
   const navigation = useNavigation();
 
   const route = useRoute();
@@ -36,8 +35,22 @@ const Quiz = () => {
           </Text>
           <View style={styles.options}>
             {question.options.map((option, i) => (
-              <TouchableOpacity key={index.toString() + i.toString()}>
-                <Text style={styles.option}>{option}</Text>
+              <TouchableOpacity
+                key={index.toString() + i.toString()}
+                onPress={() => {
+                  question.userAnswer = option;
+                  setQuestions([...questions]);
+                }}
+              >
+                <Text
+                  style={
+                    question.userAnswer === option
+                      ? styles.optionSelected
+                      : styles.option
+                  }
+                >
+                  {option}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -83,10 +96,27 @@ const Quiz = () => {
             Alert.alert("Confirmation", "Are you sure to finish the quiz?", [
               {
                 text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
+                onPress: () => {},
                 style: "cancel",
               },
-              { text: "OK", onPress: () => navigation.navigate("Result") },
+              {
+                text: "OK",
+                onPress: () => {
+                  let correctAnswers = 0;
+                  questions.forEach((question) => {
+                    if (question.correctAnswer == question.userAnswer) {
+                      correctAnswers++;
+                    }
+                  });
+                  let result = {
+                    level: levelData.id,
+                    correctAnswers: correctAnswers,
+                    totalQuestions: questions.length,
+                    accuracy: (correctAnswers / questions.length) * 100,
+                  };
+                  navigation.navigate("Result", { result: result });
+                },
+              },
             ]);
           }}
         >
@@ -176,5 +206,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 8,
     fontSize: 20,
+  },
+  optionSelected: {
+    backgroundColor: "#F1715A",
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 8,
+    fontSize: 20,
+    color: "white",
   },
 });
